@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment - FoodieExpress</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>💳 FoodieExpress</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="restaurant.php">Restaurants</a>
+      <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+      <a href="contact.html">Contact</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
+  <div class="container">
+    <h2>Payment</h2>
+    <div id="cart-items"></div>
+    <h3 id="total"></h3>
+    <form id="payment-form">
+      <label><input type="radio" name="payment_method" value="cod" checked> Cash on Delivery</label>
+      <label><input type="radio" name="payment_method" value="card"> Card</label>
+      <br><br>
+      <button type="submit">Place Order</button>
+    </form>
+    <div id="order-status"></div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let count = cart.reduce((total, item) => total + item.quantity, 0);
+      document.getElementById('cart-count').textContent = count;
+      renderCart();
+    });
+    function renderCart() {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const container = document.getElementById('cart-items');
+      const totalEl = document.getElementById('total');
+      container.innerHTML = '';
+      let total = 0;
+      if (cart.length === 0) {
+        container.innerHTML = '<p>Your cart is empty.</p>';
+        totalEl.textContent = '';
+        document.getElementById('payment-form').style.display = 'none';
+        return;
+      }
+      cart.forEach(item => {
+        total += item.price * item.quantity;
+        container.innerHTML += `
+          <div class="cart-item">
+            <span>${item.name} x ${item.quantity}</span>
+            <span>$${item.price * item.quantity}</span>
+          </div>
+        `;
+      });
+      totalEl.textContent = 'Total: $' + total.toFixed(2);
+    }
+    document.getElementById('payment-form').onsubmit = function(e) {
+      e.preventDefault();
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      if (cart.length === 0) return;
+      let total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      let payment_method = document.querySelector('input[name="payment_method"]:checked').value;
+      // Hardcoded user for demo
+      let username = 'test1';
+      let address = 'Default Address';
+      fetch('submit_order.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          username,
+          address,
+          items: cart,
+          total,
+          payment_method
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('order-status').innerHTML = '<span style="color:green">Order placed! Awaiting admin confirmation.</span>';
+          localStorage.removeItem('cart');
+          document.getElementById('cart-count').textContent = 0;
+          renderCart();
+        } else {
+          document.getElementById('order-status').innerHTML = '<span style="color:red">Failed to place order.</span>';
+        }
+      })
+      .catch(() => {
+        document.getElementById('order-status').innerHTML = '<span style="color:red">Error submitting order.</span>';
+      });
+    };
+  </script>
+</body>
+</html>

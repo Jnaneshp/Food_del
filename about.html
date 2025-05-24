@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>About - FoodieExpress</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>📦 FoodieExpress</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="payment.html">Payment</a>
+      <a href="contact.html">Contact</a>
+      <a href="about.html">About</a>
+      <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+      <a href="logout.php">Logout</a>
+
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>About Us</h2>
+    <p>FoodieExpress is your go-to online food delivery service. We partner with top chefs and local favorites to bring a wide variety of dishes to your doorstep—hot, fresh, and on time.</p>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let count = cart.reduce((total, item) => total + item.quantity, 0);
+      document.getElementById('cart-count').textContent = count;
+    });
+  </script>
+</body>
+</html>

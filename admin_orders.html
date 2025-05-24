@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Orders - FoodieExpress</title>
+  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+  <header>
+    <h1>📦 Admin Orders</h1>
+    <nav>
+      <a href="admin_dashboard.html">Dashboard</a>
+      <a href="admin_orders.html">Orders</a>
+      <a href="profile.php">Profile</a>
+      <a href="logout.php">Logout</a>
+    </nav>
+  </header>
+  <div class="container">
+    <h2>All Orders</h2>
+    <div id="orders-list"></div>
+  </div>
+  <script>
+    function fetchOrders() {
+      fetch('admin_orders.php')
+        .then(res => res.json())
+        .then(orders => {
+          let html = '';
+          if (!orders.length) html = '<p>No orders found.</p>';
+          else {
+            html += '<table border="1" style="width:100%;border-collapse:collapse;"><tr><th>ID</th><th>User</th><th>Address</th><th>Items</th><th>Total</th><th>Status</th><th>Action</th></tr>';
+            orders.forEach(order => {
+              html += `<tr><td>${order.id}</td><td>${order.username}</td><td>${order.address}</td><td><ul>`;
+              order.items.forEach(item => {
+                html += `<li>${item.item_name} x${item.quantity} - $${item.price}</li>`;
+              });
+              html += `</ul></td><td>$${order.total}</td><td>${order.status}</td><td>`;
+              if (order.status === 'pending') {
+                html += `<button onclick="updateOrder(${order.id},'confirmed')">Accept</button> <button onclick="updateOrder(${order.id},'rejected')">Reject</button>`;
+              } else {
+                html += order.status.charAt(0).toUpperCase() + order.status.slice(1);
+              }
+              html += '</td></tr>';
+            });
+            html += '</table>';
+          }
+          document.getElementById('orders-list').innerHTML = html;
+        });
+    }
+    function updateOrder(orderId, status) {
+      const formData = new FormData();
+      formData.append('order_id', orderId);
+      formData.append('status', status);
+      fetch('admin_orders.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          fetchOrders();
+        } else {
+          alert(data.error || 'Failed to update order.');
+        }
+      });
+    }
+    fetchOrders();
+  </script>
+</body>
+</html>

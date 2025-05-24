@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home - FoodieExpress</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🍽 FoodieExpress</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="restaurant.php">Restaurants</a>
+      <a href="contact.html">Contact</a>
+      <a href="about.html">About</a>
+      <a href="profile.php">Profile</a>
+      <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+      <a href="logout.php">Logout</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Welcome to FoodieExpress!</h2>
+    
+    <p>Order Your Favorite Food Online
+      Discover the best restaurants and food delivery services in your city. Browse our selection of cuisines, restaurants, and dishes to find your new favorite meal.</p>
+      <ol>
+      <li># How It Works</li>
+      <li>1. Choose Your Restaurant: Browse our list of partner restaurants and select the one that suits your taste buds.</li>
+      <li>2. Place Your Order: Choose your favorite dishes and add them to your cart.</li>
+      <li>3. Get Your Food Delivered: Our delivery partners will bring your food right to your doorste</li>
+  </ol>
+    </div>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let count = cart.reduce((total, item) => total + item.quantity, 0);
+      document.getElementById('cart-count').textContent = count;
+    });
+  </script>
+</body>
+</html>

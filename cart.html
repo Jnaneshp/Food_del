@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Cart - FoodieExpress</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🛒 FoodieExpress</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="contact.html">Contact</a>
+      <a href="about.html">About</a>
+      <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+      <a href="logout.php">Logout</a>
+
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Your Cart</h2>
+    <div id="cart-items"></div>
+    <h3 id="total"></h3>
+    <button onclick="clearCart()">Clear Cart</button>
+    <a href="payment.html"><button>Proceed to Payment</button></a>
+  </div>
+
+  <script>
+    function renderCart() {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const container = document.getElementById('cart-items');
+      const totalEl = document.getElementById('total');
+      container.innerHTML = '';
+      let total = 0;
+
+      if (cart.length === 0) {
+        container.innerHTML = '<p>Your cart is empty.</p>';
+        totalEl.textContent = '';
+        return;
+      }
+
+      cart.forEach(item => {
+        total += item.price * item.quantity;
+        container.innerHTML += `
+          <div class="cart-item">
+            <span>${item.name} x ${item.quantity}</span>
+            <span>$${item.price * item.quantity}</span>
+          </div>
+        `;
+      });
+
+      totalEl.textContent = `Total: $${total}`;
+    }
+
+    function clearCart() {
+      localStorage.removeItem('cart');
+      renderCart();
+      updateCartCount();
+    }
+
+    function updateCartCount() {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let count = cart.reduce((total, item) => total + item.quantity, 0);
+      document.getElementById('cart-count').textContent = count;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderCart();
+      updateCartCount();
+    });
+  </script>
+</body>
+</html>
