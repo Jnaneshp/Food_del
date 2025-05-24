@@ -2,32 +2,341 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact - FoodieExpress</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Segoe+UI:wght@400;500;600;700&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary-color: #ff6b35;
+      --secondary-color: #004e64;
+      --accent-color: #f9dc5c;
+      --text-dark: #2c3e50;
+      --text-light: #7f8c8d;
+      --white: #ffffff;
+      --light-bg: #f8f9fa;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --gradient: linear-gradient(135deg, var(--primary-color), #ff8f65);
+      --border-radius: 12px;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--text-dark);
+      background-color: var(--white);
+    }
+    header {
+      background: linear-gradient(135deg, var(--secondary-color), #006080);
+      color: var(--white);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: var(--shadow);
+    }
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    nav a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--gradient);
+      transition: left 0.3s ease;
+      z-index: -1;
+    }
+    nav a:hover::before { left: 0; }
+    nav a:hover { transform: translateY(-2px); }
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .hero {
+      background: linear-gradient(135deg, var(--secondary-color), #006080);
+      color: var(--white);
+      text-align: center;
+      border-radius: var(--border-radius);
+      padding: 2rem 1rem 1.5rem 1rem;
+      margin-bottom: 2rem;
+      background: url('pic/food background.jpeg') center/cover no-repeat;
+    }
+    .hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .tagline {
+      color: #ffe0b2;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    .contact-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .contact-card {
+      background: #fff;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      flex: 1 1 220px;
+      min-width: 220px;
+      max-width: 320px;
+    }
+    .contact-card i {
+      font-size: 2.2rem;
+      color: var(--primary-color);
+      margin-bottom: 0.7rem;
+    }
+    .contact-card h3 {
+      margin-bottom: 0.5rem;
+      color: var(--secondary-color);
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .form-container {
+      background: #fff;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      padding: 2rem 1.5rem;
+      max-width: 500px;
+      margin: 0 auto 2rem auto;
+    }
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: var(--light-bg);
+      transition: border 0.2s;
+    }
+    .form-control:focus {
+      border: 1.5px solid var(--primary-color);
+      outline: none;
+    }
+    .cta-btn {
+      background: linear-gradient(90deg, #ff6f00 60%, #ffa040 100%);
+      color: #fff;
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1.2rem;
+      box-shadow: 0 2px 8px rgba(255,111,0,0.08);
+      transition: background 0.3s;
+      width: 100%;
+    }
+    .cta-btn:hover {
+      background: linear-gradient(90deg, #ffa040 60%, #ff6f00 100%);
+    }
+    .footer {
+      background: #222;
+      color: #fff;
+      padding: 2rem 0 0.5rem 0;
+      margin-top: 3rem;
+    }
+    .footer-content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    .footer-section {
+      flex: 1 1 200px;
+      margin-bottom: 1.5rem;
+    }
+    .footer-section h4 {
+      color: #ff6f00;
+      margin-bottom: 0.8rem;
+    }
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
+    .footer-section ul li {
+      margin-bottom: 0.5rem;
+    }
+    .footer-section ul li a {
+      color: #ffe0b2;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-section ul li a:hover {
+      color: #fff;
+    }
+    .footer-bottom {
+      text-align: center;
+      padding: 1rem 0 0.5rem 0;
+      border-top: 1px solid #444;
+      font-size: 0.95rem;
+      color: #bbb;
+    }
+    @media (max-width: 900px) {
+      .contact-info {
+        flex-direction: column;
+        align-items: center;
+      }
+      .footer-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>📞 FoodieExpress</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="contact.html">Contact</a>
-      <a href="about.html">About</a>
-      <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
-      <a href="logout.php">Logout</a>
-
-    </nav>
+    <div class="header-content">
+      <h1>🍽 FoodieExpress</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="restaurant.php">Restaurants</a>
+        <a href="about.html">About</a>
+        <a href="profile.php">Profile</a>
+        <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+        <a href="logout.php">Logout</a>
+      </nav>
+    </div>
   </header>
-
   <div class="container">
-    <h2>Contact Us</h2>
-    <form>
-      <input type="text" placeholder="Your Name" required>
-      <input type="email" placeholder="Your Email" required>
-      <textarea placeholder="Your Message" rows="5" required></textarea>
-      <button type="submit">Send Message</button>
-    </form>
+    <div class="hero" style="background: url('pic/food background.jpeg') center/cover no-repeat;">
+      <h2>Get in Touch</h2>
+      <p class="tagline">We'd love to hear from you! Send us your questions, feedback, or suggestions.</p>
+    </div>
+    <div class="contact-info">
+      <div class="contact-card">
+        <i class="fas fa-map-marker-alt"></i>
+        <h3>Our Location</h3>
+        <p>123 Food Street, Cuisine City<br>Foodland, FL 12345</p>
+      </div>
+      <div class="contact-card">
+        <i class="fas fa-phone-alt"></i>
+        <h3>Call Us</h3>
+        <p>+1 (555) 123-4567<br>Mon-Fri: 9am-6pm</p>
+      </div>
+      <div class="contact-card">
+        <i class="fas fa-envelope"></i>
+        <h3>Email Us</h3>
+        <p>info@foodieexpress.com<br>support@foodieexpress.com</p>
+      </div>
+    </div>
+    <div class="form-container">
+      <h2>Send Us a Message</h2>
+      <form>
+        <div class="form-group">
+          <label for="name">Your Name</label>
+          <input type="text" id="name" class="form-control" placeholder="Enter your name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Your Email</label>
+          <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+          <label for="message">Your Message</label>
+          <textarea id="message" class="form-control" placeholder="Enter your message" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="cta-btn">Send Message</button>
+      </form>
+    </div>
   </div>
-
+  <div class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>FoodieExpress</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="#">Our Team</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="restaurant.php">Food Delivery</a></li>
+          <li><a href="#">Catering</a></li>
+          <li><a href="#">Corporate Orders</a></li>
+          <li><a href="#">Gift Cards</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Refund Policy</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2023 FoodieExpress. All rights reserved.</p>
+    </div>
+  </div>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       let cart = JSON.parse(localStorage.getItem('cart')) || [];

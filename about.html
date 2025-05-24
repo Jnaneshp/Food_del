@@ -2,28 +2,315 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About - FoodieExpress</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Segoe+UI:wght@400;500;600;700&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+:root {
+  --primary-color: #ff6b35;
+  --secondary-color: #004e64;
+  --accent-color: #f9dc5c;
+  --text-dark: #2c3e50;
+  --text-light: #7f8c8d;
+  --white: #ffffff;
+  --light-bg: #f8f9fa;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+  --gradient: linear-gradient(135deg, var(--primary-color), #ff8f65);
+  --border-radius: 12px;
+}
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--text-dark);
+  background-color: var(--white);
+}
+.hero {
+  background: linear-gradient(135deg, var(--secondary-color), #006080);
+  color: var(--white);
+  text-align: center;
+  border-radius: var(--border-radius);
+  padding: 2rem 1rem 1.5rem 1rem;
+  margin-bottom: 2rem;
+  background: url('pic/food background.jpeg') center/cover no-repeat;
+}
+.hero h2 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+header {
+  background: linear-gradient(135deg, var(--secondary-color), #006080);
+  color: var(--white);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: var(--shadow);
+}
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+nav {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+nav a {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+nav a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient);
+  transition: left 0.3s ease;
+  z-index: -1;
+}
+nav a:hover::before {
+  left: 0;
+}
+nav a:hover {
+  transform: translateY(-2px);
+}
+.container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+h1, h2 {
+  margin-bottom: 1rem;
+  color: #ff6f00;
+}
+.menu-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+.menu-item {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 300px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+.menu-item:hover {
+  transform: translateY(-5px);
+}
+.menu-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+.menu-item-content {
+  padding: 1rem;
+}
+.menu-item h3 {
+  margin: 0.5rem 0;
+}
+button {
+  background-color: #ff6f00;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  margin-top: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+button:hover {
+  background-color: #e65c00;
+}
+form input, form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+form button {
+  width: 100%;
+}
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+#total {
+  font-size: 1.3rem;
+  margin-top: 1.5rem;
+}
+.footer {
+  background: #222;
+  color: #fff;
+  padding: 2rem 0 0.5rem 0;
+  margin-top: 3rem;
+}
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+.footer-section {
+  flex: 1 1 200px;
+  margin-bottom: 1.5rem;
+}
+.footer-section h4 {
+  color: #ff6f00;
+  margin-bottom: 0.8rem;
+}
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+.footer-section ul li {
+  margin-bottom: 0.5rem;
+}
+.footer-section ul li a {
+  color: #ffe0b2;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.footer-section ul li a:hover {
+  color: #fff;
+}
+.footer-bottom {
+  text-align: center;
+  padding: 1rem 0 0.5rem 0;
+  border-top: 1px solid #444;
+  font-size: 0.95rem;
+  color: #bbb;
+}
+.cta-btn {
+  background: linear-gradient(90deg, #ff6f00 60%, #ffa040 100%);
+  color: #fff;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1.2rem;
+  box-shadow: 0 2px 8px rgba(255,111,0,0.08);
+  transition: background 0.3s;
+}
+.cta-btn:hover {
+  background: linear-gradient(90deg, #ffa040 60%, #ff6f00 100%);
+}
+  </style>
 </head>
 <body>
   <header>
-    <h1>📦 FoodieExpress</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="payment.html">Payment</a>
-      <a href="contact.html">Contact</a>
-      <a href="about.html">About</a>
-      <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
-      <a href="logout.php">Logout</a>
-
-    </nav>
+    <div class="header-content">
+      <h1>🍽 FoodieExpress</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="restaurant.php">Restaurants</a>
+        <a href="payment.html">Payment</a>
+        <a href="contact.html">Contact</a>
+        <a href="about.html">About</a>
+        <a href="profile.php">Profile</a>
+        <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+        <a href="logout.php">Logout</a>
+      </nav>
+    </div>
   </header>
-
   <div class="container">
-    <h2>About Us</h2>
-    <p>FoodieExpress is your go-to online food delivery service. We partner with top chefs and local favorites to bring a wide variety of dishes to your doorstep—hot, fresh, and on time.</p>
+    <div class="hero" style="background: url('pic/food background.jpeg') center/cover no-repeat;">
+      <h2>About FoodieExpress</h2>
+      <p class="tagline">Delivering deliciousness to your doorstep, every day.</p>
+    </div>
+    <section style="margin-top:2rem;">
+      <h2>Who We Are</h2>
+      <p>FoodieExpress is your go-to online food delivery service. We partner with top chefs and local favorites to bring a wide variety of dishes to your doorstep—hot, fresh, and on time.</p>
+      <p>Our mission is to make food ordering easy, fast, and enjoyable for everyone. Whether you crave comfort food or want to try something new, FoodieExpress connects you with the best restaurants in your area.</p>
+    </section>
+    <section style="margin-top:2rem;">
+      <h2>Why Choose Us?</h2>
+      <ul style="padding-left:1.5rem;">
+        <li>Wide selection of restaurants and cuisines</li>
+        <li>Fast and reliable delivery</li>
+        <li>Easy-to-use platform</li>
+        <li>Secure payment options</li>
+        <li>Dedicated customer support</li>
+      </ul>
+    </section>
   </div>
-
+  <div class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>FoodieExpress</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="#">Our Team</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="restaurant.php">Food Delivery</a></li>
+          <li><a href="#">Catering</a></li>
+          <li><a href="#">Corporate Orders</a></li>
+          <li><a href="#">Gift Cards</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Refund Policy</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2023 FoodieExpress. All rights reserved.</p>
+    </div>
+  </div>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       let cart = JSON.parse(localStorage.getItem('cart')) || [];

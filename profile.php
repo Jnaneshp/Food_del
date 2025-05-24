@@ -26,15 +26,94 @@ $orders = $order_stmt->get_result();
     <title>Profile</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Segoe+UI:wght@400;500;600;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-color: #ff6b35;
+            --secondary-color: #004e64;
+            --accent-color: #f9dc5c;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --white: #ffffff;
+            --light-bg: #f8f9fa;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --gradient: linear-gradient(135deg, var(--primary-color), #ff8f65);
+            --border-radius: 12px;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--white);
+        }
+        header {
+            background: linear-gradient(135deg, var(--secondary-color), #006080);
+            color: var(--white);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+        nav a:hover::before { left: 0; }
+        nav a:hover { transform: translateY(-2px); }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
         .profile-container {
             max-width: 500px;
-            margin: 30px auto;
+            margin: 2rem auto 0 auto;
             background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px #eee;
-            padding: 32px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
         }
-
         .profile-photo {
             width: 120px;
             height: 120px;
@@ -42,8 +121,10 @@ $orders = $order_stmt->get_result();
             object-fit: cover;
             border: 2px solid #eee;
             margin-bottom: 16px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
-
         .profile-form input[type="text"],
         .profile-form input[type="file"] {
             width: 100%;
@@ -52,50 +133,104 @@ $orders = $order_stmt->get_result();
             border-radius: 6px;
             border: 1px solid #ccc;
         }
-
         .profile-form button {
-            background: #ff5722;
+            background: linear-gradient(90deg, #ff6f00 60%, #ffa040 100%);
             color: #fff;
             border: none;
-            padding: 10px 24px;
-            border-radius: 6px;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
+            margin-top: 1.2rem;
+            box-shadow: 0 2px 8px rgba(255,111,0,0.08);
+            transition: background 0.3s;
+            width: 100%;
         }
-
+        .profile-form button:hover {
+            background: linear-gradient(90deg, #ffa040 60%, #ff6f00 100%);
+        }
         .orders-section {
             margin-top: 40px;
         }
-
         .orders-section table {
             width: 100%;
             border-collapse: collapse;
+            background: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 8px #eee;
+            overflow: hidden;
         }
-
         .orders-section th,
         .orders-section td {
             border: 1px solid #eee;
             padding: 8px;
             text-align: left;
         }
-
         .orders-section th {
             background: #f5f5f5;
+        }
+        .footer {
+            background: #222;
+            color: #fff;
+            padding: 2rem 0 0.5rem 0;
+            margin-top: 3rem;
+        }
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .footer-section {
+            flex: 1 1 200px;
+            margin-bottom: 1.5rem;
+        }
+        .footer-section h4 {
+            color: #ff6f00;
+            margin-bottom: 0.8rem;
+        }
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        .footer-section ul li a {
+            color: #ffe0b2;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer-section ul li a:hover {
+            color: #fff;
+        }
+        .footer-bottom {
+            text-align: center;
+            padding: 1rem 0 0.5rem 0;
+            border-top: 1px solid #444;
+            font-size: 0.95rem;
+            color: #bbb;
         }
     </style>
 </head>
 
 <body>
     <header>
-        <h1>🍽 FoodieExpress</h1>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="restaurant.php">Restaurants</a>
-            <a href="contact.html">Contact</a>
-            <a href="about.html">About</a>
-            <a href="profile.php">Profile</a>
-            <a href="cart.html">Cart (<span id=\"cart-count\">0</span>)</a>
-            <a href="logout.php">Logout</a>
-        </nav>
+        <div class="header-content">
+            <h1>🍽 FoodieExpress</h1>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="restaurant.php">Restaurants</a>
+                <a href="contact.html">Contact</a>
+                <a href="about.html">About</a>
+                <a href="profile.php">Profile</a>
+                <a href="cart.html">Cart (<span id=\"cart-count\">0</span>)</a>
+                <a href="logout.php">Logout</a>
+            </nav>
+        </div>
     </header>
     <div class="profile-container">
         <h2>My Profile</h2>
