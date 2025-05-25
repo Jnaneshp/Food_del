@@ -371,7 +371,13 @@
                   html += `<tr><td>${order.id}</td><td>${order.username}</td><td>${order.address}</td><td><ul>`;
                   if (Array.isArray(order.items)) {
                     order.items.forEach(item => {
-                      html += `<li>${item.name ? item.name : JSON.stringify(item)}</li>`;
+                      if (item.name && item.quantity !== undefined) {
+                        html += `<li>${item.name} <span style='color:#888;'>(x${item.quantity})</span></li>`;
+                      } else if (item.name) {
+                        html += `<li>${item.name}</li>`;
+                      } else {
+                        html += `<li>${JSON.stringify(item)}</li>`;
+                      }
                     });
                   } else {
                     html += `<li>Invalid items</li>`;

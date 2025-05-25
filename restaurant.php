@@ -289,7 +289,6 @@
       <h1>🍽 FoodieExpress</h1>
       <nav>
         <a href="index.html">Home</a>
-        <a href="restaurant.php">Restaurants</a>
         <a href="payment.html">Payment</a>
         <a href="contact.html">Contact</a>
         <a href="about.html">About</a>
