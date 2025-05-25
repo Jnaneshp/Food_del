@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Payment - FoodieExpress</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Segoe+UI:wght@400;500;600;700&display=swap');
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -87,13 +87,12 @@
       padding: 0 1rem;
     }
     .hero {
-      background: linear-gradient(135deg, var(--secondary-color), #006080);
+      background: url('pic/food background.jpeg') center/cover no-repeat;
       color: var(--white);
       text-align: center;
       border-radius: var(--border-radius);
       padding: 2rem 1rem 1.5rem 1rem;
       margin-bottom: 2rem;
-      background: url('pic/food background.jpeg') center/cover no-repeat;
     }
     .hero h2 {
       font-size: 2rem;
@@ -206,26 +205,32 @@
       </nav>
     </div>
   </header>
+
   <div class="container">
-    <div class="hero" style="background: url('pic/food background.jpeg') center/cover no-repeat;">
+    <div class="hero">
       <h2>Payment</h2>
       <p class="tagline">Complete your order securely and quickly.</p>
     </div>
-    <div style="max-width:500px;margin:2rem auto 0 auto;background:#fff;border-radius:var(--border-radius);box-shadow:var(--shadow);padding:2rem;">
+
+    <div class="payment-box">
       <div id="cart-items"></div>
       <h3 id="total"></h3>
       <form id="payment-form">
         <div class="form-group">
-          <label><input type="radio" name="payment_method" value="cod" checked> Cash on Delivery</label>
+          <label for="address">Delivery Address</label>
+          <input type="text" id="address" name="address" required readonly />
         </div>
         <div class="form-group">
-          <label><input type="radio" name="payment_method" value="card"> Card</label>
+          <label>Payment Method</label><br />
+          <label><input type="radio" name="payment_method" value="cod" checked /> Cash on Delivery</label>
+          <label><input type="radio" name="payment_method" value="card" /> Card</label>
         </div>
         <button type="submit" class="cta-btn">Place Order</button>
       </form>
       <div id="order-status" style="margin-top:1rem;"></div>
     </div>
   </div>
+
   <div class="footer">
     <div class="footer-content">
       <div class="footer-section">
@@ -260,64 +265,82 @@
       <p>&copy; 2023 FoodieExpress. All rights reserved.</p>
     </div>
   </div>
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       let cart = JSON.parse(localStorage.getItem('cart')) || [];
       let count = cart.reduce((total, item) => total + item.quantity, 0);
       document.getElementById('cart-count').textContent = count;
       renderCart();
+
+      // Fetch and display user address
+      fetch('get_user_address.php')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.address) {
+            document.getElementById('address').value = data.address;
+          } else {
+            document.getElementById('address').value = '';
+            alert('Could not fetch address. Please update your profile.');
+          }
+        });
+
+      document.getElementById('payment-form').onsubmit = function (e) {
+        e.preventDefault();
+        let payment_method = document.querySelector('input[name="payment_method"]:checked').value;
+        let address = document.getElementById('address').value;
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        let username = 'test1'; // Replace with actual session value in production
+
+        fetch('submit_order.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username,
+            address,
+            items: cart,
+            total,
+            payment_method
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert('Order placed successfully!');
+            localStorage.removeItem('cart');
+            window.location.href = 'index.html';
+          } else {
+            alert(data.error || 'Failed to place order.');
+          }
+        });
+      };
     });
+
     function renderCart() {
       let cart = JSON.parse(localStorage.getItem('cart')) || [];
       const container = document.getElementById('cart-items');
       const totalEl = document.getElementById('total');
       container.innerHTML = '';
       let total = 0;
+
       if (cart.length === 0) {
         container.innerHTML = '<p>Your cart is empty.</p>';
         totalEl.textContent = '';
         document.getElementById('payment-form').style.display = 'none';
         return;
       }
+
       cart.forEach(item => {
         total += item.price * item.quantity;
         container.innerHTML += `
           <div class="cart-item">
             <span>${item.name} x ${item.quantity}</span>
-            <span>$${item.price * item.quantity}</span>
-          </div>
-        `;
+            <span>$${(item.price * item.quantity).toFixed(2)}</span>
+          </div>`;
       });
+
       totalEl.textContent = 'Total: $' + total.toFixed(2);
-    }
-    document.getElementById('payment-form').onsubmit = function(e) {
-      e.preventDefault();
-      let cart = JSON.parse(localStorage.getItem('cart')) || [];
-      if (cart.length === 0) return;
-      let total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-      let payment_method = document.querySelector('input[name="payment_method"]:checked').value;
-      // Hardcoded user for demo
-      let username = 'test1';
-      let address = 'Default Address';
-      fetch('submit_order.php', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          username,
-          address,
-          items: cart,
-          total,
-          payment_method
-        })
-      })
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById('order-status').textContent = data;
-        localStorage.removeItem('cart');
-        renderCart();
-        let count = 0;
-        document.getElementById('cart-count').textContent = count;
-      });
     }
   </script>
 </body>

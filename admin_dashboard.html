@@ -369,9 +369,13 @@
                 html += '<table border="1" style="width:100%;border-collapse:collapse;"><tr><th>ID</th><th>User</th><th>Address</th><th>Items</th><th>Total</th><th>Status</th><th>Action</th></tr>';
                 orders.forEach(order => {
                   html += `<tr><td>${order.id}</td><td>${order.username}</td><td>${order.address}</td><td><ul>`;
-                  order.items.forEach(item => {
-                    html += `<li>${item.item_name} x${item.quantity} - $${item.price}</li>`;
-                  });
+                  if (Array.isArray(order.items)) {
+                    order.items.forEach(item => {
+                      html += `<li>${item.name ? item.name : JSON.stringify(item)}</li>`;
+                    });
+                  } else {
+                    html += `<li>Invalid items</li>`;
+                  }
                   html += `</ul></td><td>$${order.total}</td><td>${order.status}</td><td>`;
                   if (order.status === 'pending') {
                     html += `<button onclick="updateOrder(${order.id},'confirmed')">Accept</button> <button onclick="updateOrder(${order.id},'rejected')">Reject</button>`;

@@ -247,16 +247,26 @@ form button {
             html += '<table border="1" style="width:100%;border-collapse:collapse;"><tr><th>ID</th><th>User</th><th>Address</th><th>Items</th><th>Total</th><th>Status</th><th>Action</th></tr>';
             orders.forEach(order => {
               html += `<tr><td>${order.id}</td><td>${order.username}</td><td><span class="order-address">${order.address}</span></td><td><ul class="order-items-list">`;
-              order.items.forEach(item => {
-                html += `<li><span class="item-name">${item.item_name || item.name}</span> <span class="item-qty">x${item.quantity}</span> <span class="item-price">- $${item.price}</span></li>`;
-              });
+              if (Array.isArray(order.items)) {
+                order.items.forEach(item => {
+                  if (item.name && item.quantity) {
+                    html += `<li>${item.name} x ${item.quantity}</li>`;
+                  } else if (item.name) {
+                    html += `<li>${item.name}</li>`;
+                  } else {
+                    html += `<li>${JSON.stringify(item)}</li>`;
+                  }
+                });
+              } else {
+                html += `<li>Invalid items</li>`;
+              }
               html += `</ul></td><td>$${order.total}</td><td><span class="order-status">${order.status}</span></td><td>`;
               if (order.status === 'pending') {
                 html += `<button class="accept-btn" onclick="updateOrder(${order.id},'confirmed')">Accept</button> <button class="reject-btn" onclick="updateOrder(${order.id},'rejected')">Reject</button>`;
               } else {
                 html += order.status.charAt(0).toUpperCase() + order.status.slice(1);
               }
-              html += '</td></tr>';
+              html += `</td></tr>`;
             });
             html += '</table>';
           }
