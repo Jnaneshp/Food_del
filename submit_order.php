@@ -13,6 +13,17 @@ $items = json_encode($data['items']);
 $total = floatval($data['total']);
 $payment_method = $data['payment_method'];
 $status = 'pending';
+$card_number = isset($data['card_number']) ? $data['card_number'] : null;
+$expiry = isset($data['expiry']) ? $data['expiry'] : null;
+$cvv = isset($data['cvv']) ? $data['cvv'] : null;
+
+if ($payment_method === 'card') {
+    // Store card details in users table (update profile)
+    $update = $conn->prepare("UPDATE users SET card_number=?, card_expiry=?, card_cvv=? WHERE username=?");
+    $update->bind_param("ssss", $card_number, $expiry, $cvv, $username);
+    $update->execute();
+}
+
 $stmt = $conn->prepare("INSERT INTO orders (username, address, items, total, payment_method, status) VALUES (?, ?, ?, ?, ?, ?)");
 $stmt->bind_param("sssiss", $username, $address, $items, $total, $payment_method, $status);
 if ($stmt->execute()) {

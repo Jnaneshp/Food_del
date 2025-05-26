@@ -10,7 +10,10 @@ CREATE TABLE IF NOT EXISTS users (
     full_name VARCHAR(100),
     address VARCHAR(255),
     photo VARCHAR(255),
-    phone VARCHAR(20)
+    phone VARCHAR(20),
+    card_number VARCHAR(25),
+    card_expiry VARCHAR(7),
+    card_cvv VARCHAR(5)
 );
 
 CREATE TABLE IF NOT EXISTS restaurants (
