@@ -16,8 +16,9 @@ $status = 'pending';
 $card_number = isset($data['card_number']) ? $data['card_number'] : null;
 $expiry = isset($data['expiry']) ? $data['expiry'] : null;
 $cvv = isset($data['cvv']) ? $data['cvv'] : null;
+$save_card = isset($data['save_card']) ? $data['save_card'] : false;
 
-if ($payment_method === 'card') {
+if ($payment_method === 'card' && $save_card) {
     // Store card details in users table (update profile)
     $update = $conn->prepare("UPDATE users SET card_number=?, card_expiry=?, card_cvv=? WHERE username=?");
     $update->bind_param("ssss", $card_number, $expiry, $cvv, $username);

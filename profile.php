@@ -27,7 +27,13 @@ $orders = $order_stmt->get_result();
     <link rel="stylesheet" href="style.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Segoe+UI:wght@400;500;600;700&display=swap');
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
             --primary-color: #ff6b35;
             --secondary-color: #004e64;
@@ -41,12 +47,14 @@ $orders = $order_stmt->get_result();
             --gradient: linear-gradient(135deg, var(--primary-color), #ff8f65);
             --border-radius: 12px;
         }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: var(--text-dark);
             background-color: var(--white);
         }
+
         header {
             background: linear-gradient(135deg, var(--secondary-color), #006080);
             color: var(--white);
@@ -55,6 +63,7 @@ $orders = $order_stmt->get_result();
             z-index: 1000;
             box-shadow: var(--shadow);
         }
+
         .header-content {
             max-width: 1200px;
             margin: 0 auto;
@@ -64,6 +73,7 @@ $orders = $order_stmt->get_result();
             align-items: center;
             flex-wrap: wrap;
         }
+
         header h1 {
             font-size: 2rem;
             font-weight: 700;
@@ -72,12 +82,14 @@ $orders = $order_stmt->get_result();
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+
         nav {
             display: flex;
             gap: 2rem;
             align-items: center;
             flex-wrap: wrap;
         }
+
         nav a {
             color: var(--white);
             text-decoration: none;
@@ -88,6 +100,7 @@ $orders = $order_stmt->get_result();
             position: relative;
             overflow: hidden;
         }
+
         nav a::before {
             content: '';
             position: absolute;
@@ -99,13 +112,21 @@ $orders = $order_stmt->get_result();
             transition: left 0.3s ease;
             z-index: -1;
         }
-        nav a:hover::before { left: 0; }
-        nav a:hover { transform: translateY(-2px); }
+
+        nav a:hover::before {
+            left: 0;
+        }
+
+        nav a:hover {
+            transform: translateY(-2px);
+        }
+
         .container {
             max-width: 1000px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
+
         .profile-container {
             max-width: 500px;
             margin: 2rem auto 0 auto;
@@ -114,6 +135,7 @@ $orders = $order_stmt->get_result();
             box-shadow: var(--shadow);
             padding: 2rem;
         }
+
         .profile-photo {
             width: 120px;
             height: 120px;
@@ -125,6 +147,7 @@ $orders = $order_stmt->get_result();
             margin-left: auto;
             margin-right: auto;
         }
+
         .profile-form input[type="text"],
         .profile-form input[type="file"] {
             width: 100%;
@@ -133,6 +156,7 @@ $orders = $order_stmt->get_result();
             border-radius: 6px;
             border: 1px solid #ccc;
         }
+
         .profile-form button {
             background: linear-gradient(90deg, #ff6f00 60%, #ffa040 100%);
             color: #fff;
@@ -143,16 +167,19 @@ $orders = $order_stmt->get_result();
             font-weight: 600;
             cursor: pointer;
             margin-top: 1.2rem;
-            box-shadow: 0 2px 8px rgba(255,111,0,0.08);
+            box-shadow: 0 2px 8px rgba(255, 111, 0, 0.08);
             transition: background 0.3s;
             width: 100%;
         }
+
         .profile-form button:hover {
             background: linear-gradient(90deg, #ffa040 60%, #ff6f00 100%);
         }
+
         .orders-section {
             margin-top: 40px;
         }
+
         .orders-section table {
             width: 100%;
             border-collapse: collapse;
@@ -161,21 +188,25 @@ $orders = $order_stmt->get_result();
             box-shadow: 0 2px 8px #eee;
             overflow: hidden;
         }
+
         .orders-section th,
         .orders-section td {
             border: 1px solid #eee;
             padding: 8px;
             text-align: left;
         }
+
         .orders-section th {
             background: #f5f5f5;
         }
+
         .footer {
             background: #222;
             color: #fff;
             padding: 2rem 0 0.5rem 0;
             margin-top: 3rem;
         }
+
         .footer-content {
             display: flex;
             flex-wrap: wrap;
@@ -184,29 +215,36 @@ $orders = $order_stmt->get_result();
             margin: 0 auto;
             padding: 0 1rem;
         }
+
         .footer-section {
             flex: 1 1 200px;
             margin-bottom: 1.5rem;
         }
+
         .footer-section h4 {
             color: #ff6f00;
             margin-bottom: 0.8rem;
         }
+
         .footer-section ul {
             list-style: none;
             padding: 0;
         }
+
         .footer-section ul li {
             margin-bottom: 0.5rem;
         }
+
         .footer-section ul li a {
             color: #ffe0b2;
             text-decoration: none;
             transition: color 0.3s;
         }
+
         .footer-section ul li a:hover {
             color: #fff;
         }
+
         .footer-bottom {
             text-align: center;
             padding: 1rem 0 0.5rem 0;
@@ -242,6 +280,25 @@ $orders = $order_stmt->get_result();
             <input type="text" name="phone" placeholder="Phone Number" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>" required>
             <button type="submit">Save Changes</button>
         </form>
+        <div id="saved-card-section" style="margin-top:24px;"></div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                fetch('get_saved_card.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        let section = document.getElementById('saved-card-section');
+                        if (data.success && data.card) {
+                            section.innerHTML = `<h3>Saved Card</h3>
+                            <div style='background:#f8f9fa;padding:1rem;border-radius:8px;margin-bottom:1rem;'>
+                                <strong>Card:</strong> **** **** **** ${data.card.last4}<br>
+                                <strong>Expiry:</strong> ${data.card.expiry}
+                            </div>`;
+                        } else {
+                            section.innerHTML = `<h3>Saved Card</h3><div style='color:#888;'>No saved card found.</div>`;
+                        }
+                    });
+            });
+        </script>
         <?php
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $full_name = trim($_POST['full_name']);
