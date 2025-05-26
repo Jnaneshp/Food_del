@@ -225,6 +225,7 @@
           <label><input type="radio" name="payment_method" value="cod" checked /> Cash on Delivery</label>
           <label><input type="radio" name="payment_method" value="card" /> Card</label>
         </div>
+        <div class="form-group" id="saved-card-section" style="display:none;"></div>
         <div id="card-details" style="display:none;">
           <div class="form-group">
             <label for="card_number">Card Number</label>
@@ -303,12 +304,49 @@
       const cardRadio = document.querySelector('input[value="card"]');
       const codRadio = document.querySelector('input[value="cod"]');
       const cardDetails = document.getElementById('card-details');
+      const savedCardSection = document.getElementById('saved-card-section');
+      let savedCard = null;
+
       cardRadio.addEventListener('change', () => {
-        if (cardRadio.checked) cardDetails.style.display = '';
+        if (cardRadio.checked) {
+          // Fetch saved card from backend
+          fetch('get_saved_card.php')
+            .then(res => res.json())
+            .then(data => {
+              savedCardSection.innerHTML = '';
+              if (data.success && data.card) {
+                savedCard = data.card;
+                savedCardSection.style.display = '';
+                savedCardSection.innerHTML = `
+                  <label>Saved Card:</label>
+                  <div style='margin-bottom:0.5rem;'>
+                    <span>**** **** **** ${savedCard.last4} (Exp: ${savedCard.expiry})</span>
+                  </div>
+                  <button type='button' id='use-new-card' class='cta-btn' style='width:auto;padding:0.4rem 1.2rem;margin-bottom:1rem;'>Enter New Card</button>
+                `;
+                cardDetails.style.display = 'none';
+                document.getElementById('use-new-card').onclick = function() {
+                  savedCardSection.style.display = 'none';
+                  cardDetails.style.display = '';
+                };
+              } else {
+                savedCardSection.style.display = 'none';
+                cardDetails.style.display = '';
+              }
+            });
+        }
       });
       codRadio.addEventListener('change', () => {
-        if (codRadio.checked) cardDetails.style.display = 'none';
+        if (codRadio.checked) {
+          savedCardSection.style.display = 'none';
+          cardDetails.style.display = 'none';
+        }
       });
+
+      // On page load, if card is selected, trigger change
+      if (cardRadio.checked) {
+        cardRadio.dispatchEvent(new Event('change'));
+      }
 
       document.getElementById('payment-form').onsubmit = function (e) {
         e.preventDefault();
@@ -319,12 +357,19 @@
         let username = 'test1'; // Replace with actual session value in production
         let card_number = '', expiry = '', cvv = '';
         if (payment_method === 'card') {
-          card_number = document.getElementById('card_number').value.trim();
-          expiry = document.getElementById('expiry').value.trim();
-          cvv = document.getElementById('cvv').value.trim();
-          if (!card_number || !expiry || !cvv) {
-            alert('Please fill in all card details.');
-            return;
+          // If savedCardSection is visible, use saved card
+          if (savedCardSection.style.display !== 'none' && savedCard) {
+            card_number = savedCard.card_number;
+            expiry = savedCard.expiry;
+            cvv = '';
+          } else {
+            card_number = document.getElementById('card_number').value.trim();
+            expiry = document.getElementById('expiry').value.trim();
+            cvv = document.getElementById('cvv').value.trim();
+            if (!card_number || !expiry || !cvv) {
+              alert('Please fill in all card details.');
+              return;
+            }
           }
         }
         fetch('submit_order.php', {
