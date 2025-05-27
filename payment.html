@@ -237,8 +237,8 @@
               <input type="checkbox" id="save_card" name="save_card" />
               <label for="save_card">Save this card for future payments</label>
             </div>
-            <button type="submit" class="cta-btn">Place Order</button>
         </div>
+        <button type="submit" class="cta-btn" id="place-order-btn">Place Order</button>
       </form>
       <div id="order-status" style="margin-top:1rem;"></div>
     </div>
@@ -303,7 +303,18 @@
       const codRadio = document.querySelector('input[value="cod"]');
       const cardDetails = document.getElementById('card-details');
       const savedCardSection = document.getElementById('saved-card-section');
+      const placeOrderBtn = document.getElementById('place-order-btn');
       let savedCard = null;
+
+      function updatePlaceOrderVisibility() {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let paymentSelected = cardRadio.checked || codRadio.checked;
+        if (cart.length > 0 && paymentSelected) {
+          placeOrderBtn.style.display = '';
+        } else {
+          placeOrderBtn.style.display = 'none';
+        }
+      }
 
       cardRadio.addEventListener('change', () => {
         if (cardRadio.checked) {
@@ -331,20 +342,24 @@
                 savedCardSection.style.display = 'none';
                 cardDetails.style.display = '';
               }
+              updatePlaceOrderVisibility();
             });
         }
+        updatePlaceOrderVisibility();
       });
       codRadio.addEventListener('change', () => {
         if (codRadio.checked) {
           savedCardSection.style.display = 'none';
           cardDetails.style.display = 'none';
         }
+        updatePlaceOrderVisibility();
       });
 
       // On page load, if card is selected, trigger change
       if (cardRadio.checked) {
         cardRadio.dispatchEvent(new Event('change'));
       }
+      updatePlaceOrderVisibility();
 
       document.getElementById('payment-form').onsubmit = function (e) {
         e.preventDefault();

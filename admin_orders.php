@@ -20,10 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 // GET: fetch all orders
-$result = $conn->query("SELECT id, username, address, items, total, status FROM orders ORDER BY id DESC");
+$result = $conn->query("SELECT id, username, address, items, total, payment_method, status FROM orders ORDER BY id DESC");
 $orders = [];
 while ($row = $result->fetch_assoc()) {
     $row['items'] = json_decode($row['items'], true);
+    $row['total'] = is_numeric($row['total']) ? floatval($row['total']) : 0;
     $orders[] = $row;
 }
 echo json_encode($orders);
